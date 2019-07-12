@@ -1,5 +1,6 @@
 package com.example.blog.controllers
 
+import com.example.blog.BlogProperties
 import com.example.blog.entities.Article
 import com.example.blog.entities.User
 import com.example.blog.repositories.ArticleRepository
@@ -14,10 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @Controller
-class HtmlController(private val repository: ArticleRepository) {
+class HtmlController(private val repository: ArticleRepository, private val properties: BlogProperties) {
     @GetMapping("/")
     fun blog(model: Model): String {
-        model["title"] = "Blog"
+        model["title"] = properties.title
+        model["banner"] = properties.banner
         model["articles"] = repository.findAllByOrderByAddedAtDesc().map { it.render() }
         return "blog"
     }
@@ -31,30 +33,6 @@ class HtmlController(private val repository: ArticleRepository) {
         model["title"] = article.title
         model["article"] = article
         return "article"
-    }
-
-    @RestController
-    @RequestMapping("/api/article")
-    class ArticleController(private val repository: ArticleRepository) {
-
-        @GetMapping("/")
-        fun findAll() = repository.findAllByOrderByAddedAtDesc()
-
-        @GetMapping("/{slug}")
-        fun findOne(@PathVariable slug: String) =
-                repository.findBySlug(slug) ?: throw IllegalArgumentException("Wrong article slug provided")
-
-    }
-
-    @RestController
-    @RequestMapping("/api/user")
-    class UserController(private val repository: UserRepository) {
-
-        @GetMapping("/")
-        fun findAll() = repository.findAll()
-
-        @GetMapping("/{login}")
-        fun findOne(@PathVariable login: String) = repository.findByLogin(login)
     }
 
     fun Article.render() = RenderedArticle(

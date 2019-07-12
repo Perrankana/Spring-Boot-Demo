@@ -7,6 +7,7 @@ plugins {
 	kotlin("jvm") version "1.2.71"
 	kotlin("plugin.spring") version "1.2.71"
 	kotlin("plugin.allopen") version "1.2.71"
+	kotlin("kapt") version "1.2.71"
 }
 
 allOpen {
@@ -38,6 +39,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	kapt("org.springframework.boot:spring-boot-configuration-processor")
 	runtimeOnly("com.h2database:h2")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
